@@ -19,7 +19,8 @@ async def sub_handle(websocket, path=None):
             elif message_type == 'print_complete':
                 await Message_Handler.handle_print_complete(data)
     except Exception as e:
-        await websocket.close()
+        print(e)
+        pass
 
 
 async def main():
