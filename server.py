@@ -25,7 +25,7 @@ async def sub_handle(websocket, path=None):
         pass
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-localhost_pem = pathlib.Path(__file__).with_name("localhost.pem")
+localhost_pem = r'/www/server/panel/vhost/cert/down.slpzb.com/fullchain.pem'
 ssl_context.load_cert_chain(localhost_pem)
 
 
