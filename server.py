@@ -23,16 +23,19 @@ async def sub_handle(websocket, path=None):
     except Exception as e:
         print(e)
         pass
+#
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-localhost_pem = r'/www/server/panel/vhost/cert/down.slpzb.com/privkey.pem'
-ssl_context.load_cert_chain(localhost_pem)
+cert_file = pathlib.Path(__file__).with_name("fullchain.pem")
+key_file = pathlib.Path(__file__).with_name("privkey.key")
+ssl_context.load_cert_chain(certfile=cert_file, keyfile=key_file)
 
 
 async def main():
-    async with serve(sub_handle, "0.0.0.0", 8765, ssl=ssl_context) as server:
+    async with serve(sub_handle, "0.0.0.0", 7009, ssl=ssl_context) as server:
         print('server start')
         await server.serve_forever()
+
 
 
 if __name__ == '__main__':
