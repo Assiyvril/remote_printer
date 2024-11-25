@@ -54,10 +54,20 @@ class WsConnectionPool:
         del self.phones[phone_id]
 
     def printer_exist(self, printer_id):
-        return printer_id in self.printers.keys()
+        if printer_id in self.printers.keys():
+            if self.printers[printer_id].closed:
+                print('printer 存在，但是已经关闭')
+                return False
+            return True
+        return False
 
     def phone_exist(self, phone_id):
-        return phone_id in self.phones.keys()
+        if phone_id in self.phones.keys():
+            if self.phones[phone_id].closed:
+                print('phone 存在，但是已经关闭')
+                return False
+            return True
+        return False
 
     async def clear_pool(self):
         # 检查连接池中的连接是否还在，不在则清除
