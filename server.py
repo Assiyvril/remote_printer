@@ -2,6 +2,8 @@
 import asyncio
 from websockets.asyncio.server import serve
 from web_socket_message_handle import Message_Handler
+import ssl
+import pathlib
 # from websocket_connection_pool import Ws_Pool
 
 
@@ -22,12 +24,15 @@ async def sub_handle(websocket, path=None):
         print(e)
         pass
 
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+localhost_pem = pathlib.Path(__file__).with_name("localhost.pem")
+ssl_context.load_cert_chain(localhost_pem)
+
 
 async def main():
-    async with serve(sub_handle, "0.0.0.0", 8765) as server:
+    async with serve(sub_handle, "0.0.0.0", 8765, ssl=ssl_context) as server:
         print('server start')
         await server.serve_forever()
-
 
 
 if __name__ == '__main__':
