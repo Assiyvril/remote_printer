@@ -27,7 +27,12 @@ class WsConnectionPool:
             await self.printers[printer_id].send(message)
         except ConnectionClosedOK as e:
             await self.remove_printer(printer_id)
+        except ConnectionClosedError as e:
+            # 关闭握手未正确完成的连接
+            # 无妨，直接移除即可
+            await self.remove_printer(printer_id)
         except Exception as e:
+            await self.remove_printer(printer_id)
             tf = traceback.format_exc()
             title = f'send_to_printer {str(e)}'
             Bug_Report.send_notification(title, tf)
@@ -46,11 +51,17 @@ class WsConnectionPool:
             Bug_Report.send_notification(title, tf)
 
     async def remove_printer(self, printer_id):
-        await self.printers[printer_id].close()
+        try:
+            await self.printers[printer_id].close()
+        except Exception as e:
+            print('remove_printer 时关闭 失败', e)
         del self.printers[printer_id]
 
     async def remove_phone(self, phone_id):
-        await self.phones[phone_id].close()
+        try:
+            await self.phones[phone_id].close()
+        except Exception as e:
+            print('remove_phone 时关闭 失败', e)
         del self.phones[phone_id]
 
     def printer_exist(self, printer_id):
