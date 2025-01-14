@@ -44,4 +44,4 @@ async def unix_main():
 
 
 if __name__ == '__main__':
-    asyncio.run(unix_main())
+    asyncio.run(main())
