@@ -1,6 +1,6 @@
 # import websockets
 import asyncio
-from websockets.asyncio.server import serve
+from websockets.asyncio.server import serve, unix_serve
 from web_socket_message_handle import Message_Handler
 import ssl
 import pathlib
@@ -37,6 +37,11 @@ async def main():
         await server.serve_forever()
 
 
+async def unix_main():
+    async with unix_serve(sub_handle, "/tmp/wsprint.sock") as server:
+        print('unix server start')
+        await server.serve_forever()
+
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(unix_main())
